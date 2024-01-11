@@ -3,13 +3,16 @@
     <div class="h-96 flex flex-nowrap justify-start">
       <input type="radio" name="slide" class="hidden" />
       <label
+        v-if="randomNumber"
         v-for="i in 4"
         :key="i"
         class="w-20 rounded-3xl bg-auto cursor-pointer overflow-hidden mx-[10px] flex items-end duration-300 ease-in-out shadow-2xl"
-        :class="{ 'w-[600px]': isChecked[i], active: isChecked[i] }"
+        :class="{ 'w-[600px]': isChecked[i] }"
         @click.prevent="toggle(i)"
         :style="{
-          'background-image': `url('https://picsum.photos/id/${i}/600/600')`,
+          'background-image': `url('https://picsum.photos/id/${
+            i + randomNumber
+          }/600/600')`,
         }"
       >
         <div class="text-white flex flex-nowrap">
@@ -37,11 +40,23 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
+
 const isChecked = ref({ 1: true, 2: false, 3: false, 4: false });
+const randomNumber = ref(null);
+
+const randomNumberFunction = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
 
 const toggle = (labelNumber) => {
   for (let i = 1; i <= 4; i++) {
     isChecked.value[i] = i === labelNumber;
   }
 };
+
+onMounted(() => {
+  // Setze den Zufallswert einmalig beim Laden der Komponente
+  randomNumber.value = randomNumberFunction(1, 100);
+});
 </script>
